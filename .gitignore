@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+instance/
+.env
+# The database is generated locally on first run (see README) and must
+# never be committed -- it can contain real users' password hashes and
+# personal quiz history. This blanket rule catches it no matter where
+# QUIZMASTER_DATABASE_PATH points it, not just the default instance/ path.
+*.db
+*.sqlite3
+# Safety net: datasets ship gzip-compressed (*.csv.gz) to stay under
+# GitHub's 100MB file limit. If a CSV is ever decompressed locally for
+# testing, don't let the large raw file get committed by accident.
+app/data_source/*.csv
+app/data_source/categories/*.csv

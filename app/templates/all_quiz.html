@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}All Quiz - Quiz Master{% endblock %}
+{% set active = 'all_quiz' %}
+{% block header %}{% endblock %}
+{% block content %}
+<h1 class="page-title">📊 All Quiz</h1>
+<p class="page-sub">Complete quiz statistics and performance overview (Play All Quiz / Normal Quiz 2)</p>
+
+<div class="section-title" style="margin-top:6px;">🧠 Quiz Statistics</div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="icon">🎮</div><div class="lbl">Total Games Played</div><div class="val">{{ summary.total_games }}</div></div>
+  <div class="stat-card"><div class="icon">✅</div><div class="lbl">Total Correct Answers</div><div class="val">{{ summary.total_correct }}</div></div>
+  <div class="stat-card"><div class="icon">❌</div><div class="lbl">Total Wrong Answers</div><div class="val">{{ summary.total_wrong }}</div></div>
+  <div class="stat-card"><div class="icon">🏆</div><div class="lbl">Total Score</div><div class="val">{{ '{:,}'.format(summary.total_score) }}</div></div>
+  <div class="stat-card"><div class="icon">❓</div><div class="lbl">Total Questions Played</div><div class="val">{{ summary.total_questions }}</div></div>
+  <div class="stat-card"><div class="icon">⏱️</div><div class="lbl">Total Time Spent Overall</div><div class="val">{{ summary.total_time }}</div></div>
+</div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="icon">⭐</div><div class="lbl">Highest Score in One Game</div><div class="val">{{ summary.highest_score }}</div></div>
+  <div class="stat-card"><div class="icon">📋</div><div class="lbl">Highest Questions Played</div><div class="val">{{ summary.highest_questions }}</div></div>
+  <div class="stat-card"><div class="icon">✅</div><div class="lbl">Highest Correct Answers</div><div class="val">{{ summary.highest_correct }}</div></div>
+  <div class="stat-card"><div class="icon">❌</div><div class="lbl">Highest Wrong Answers</div><div class="val">{{ summary.highest_wrong }}</div></div>
+  <div class="stat-card"><div class="icon">⏱️</div><div class="lbl">Highest Time Spent</div><div class="val">{{ summary.highest_time }}</div></div>
+</div>
+
+<div class="section-title">📈 Overall Performance</div>
+<div class="perf-grid">
+  <div class="perf-item"><div class="lbl">Overall Accuracy</div><div class="val">{{ summary.accuracy }}%</div><div class="progress green"><div style="width:{{ summary.accuracy }}%;"></div></div></div>
+  <div class="perf-item"><div class="lbl">Average Time per Game</div><div class="val">{{ summary.avg_time }} min</div><div class="progress purple"><div style="width:60%;"></div></div></div>
+  <div class="perf-item"><div class="lbl">Average Score per Game</div><div class="val">{{ summary.avg_score }}</div><div class="progress orange"><div style="width:60%;"></div></div></div>
+  <div class="perf-item"><div class="lbl">Average Questions per Game</div><div class="val">{{ summary.avg_questions }}</div><div class="progress purple"><div style="width:50%;"></div></div></div>
+  <div class="perf-item"><div class="lbl">Correct Answer Rate</div><div class="val">{{ summary.accuracy }}%</div><div class="progress green"><div style="width:{{ summary.accuracy }}%;"></div></div></div>
+  <div class="perf-item"><div class="lbl">Wrong Answer Rate</div><div class="val">{{ summary.wrong_rate }}%</div><div class="progress red"><div style="width:{{ summary.wrong_rate }}%;"></div></div></div>
+</div>
+
+<div class="info-note">ℹ️ All statistics on this page are calculated only from your Play All Quiz (Normal Quiz 2) games.</div>
+{% endblock %}

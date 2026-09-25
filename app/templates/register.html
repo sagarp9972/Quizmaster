@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register - Quiz Master</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="logo-row">
+      <img src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master">
+    </div>
+    <h1>Create Account</h1>
+    <p class="sub">Join Quiz Master and start testing your knowledge</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}
+        <div class="auth-flash">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="post">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" name="full_name" value="{{ form.get('full_name','') }}" required autofocus>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" name="email" value="{{ form.get('email','') }}" required>
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" value="{{ form.get('username','') }}" required>
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <div class="gender-row">
+          {% for g in ['Male', 'Female', 'Other', 'Prefer not to say'] %}
+          <label class="gender-opt">
+            <input type="radio" name="gender" value="{{ g }}" {{ 'checked' if form.get('gender')==g }} required>
+            {{ g }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" name="password" id="pw1" required minlength="6">
+          <button type="button" class="pw-toggle" data-target="pw1" aria-label="Show password">👁️</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <div class="pw-wrap">
+          <input type="password" name="confirm_password" id="pw2" required minlength="6">
+          <button type="button" class="pw-toggle" data-target="pw2" aria-label="Show password">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-block">Create Account</button>
+    </form>
+    <div class="auth-foot">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>

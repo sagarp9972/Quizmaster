@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard - Quiz Master{% endblock %}
+{% set active = 'leaderboard' %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+  <div>
+    <h1 class="page-title">🏆 Leaderboard</h1>
+    <p class="page-sub">See how you rank against other players.</p>
+  </div>
+  <div class="card" style="padding:14px 20px;text-align:center;">
+    <div style="font-size:12.5px;color:var(--text-muted);">Total Players</div>
+    <div style="font-size:20px;font-weight:800;">{{ total_players }}</div>
+  </div>
+</div>
+
+<div class="pill-row">
+  {% for key,label in [('all','All Time'),('month','This Month'),('week','This Week'),('today','Today')] %}
+  <a class="pill {{ 'active' if period==key }}" href="?period={{ key }}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card table-wrap">
+  <table class="data">
+    <thead><tr><th>Rank</th><th>Player User Name</th><th>Total Score</th><th>Total Questions Played</th><th>Total Games Played</th><th>Total Time Spent (Overall)</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr class="{{ 'me' if r.user_id==current_user.id else '' }}">
+        <td>
+          {% if r.rank==1 %}<span class="badge-rank gold">🥇</span>
+          {% elif r.rank==2 %}<span class="badge-rank silver">🥈</span>
+          {% elif r.rank==3 %}<span class="badge-rank bronze">🥉</span>
+          {% else %}{{ r.rank }}{% endif %}
+        </td>
+        <td>{{ r.username }}</td>
+        <td style="color:var(--purple);font-weight:700;">{{ '{:,}'.format(r.score) }}</td>
+        <td>{{ '{:,}'.format(r.questions) }}</td>
+        <td>{{ r.games }}</td>
+        <td>{{ r.time }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">No players yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if my_rank %}
+<div class="myrank-box">
+  <div>
+    <div class="rank">Your Rank: #{{ my_rank.rank }}</div>
+    <div class="who">{{ my_rank.username }} — {{ '{:,}'.format(my_rank.score) }} Total Score</div>
+  </div>
+  <div>🏅</div>
+</div>
+{% endif %}
+
+{% if pages > 1 %}
+<div class="pagination">
+  <a href="?period={{ period }}&page={{ page-1 if page>1 else 1 }}">← Previous</a>
+  {% for p in range(1, pages+1) %}
+    {% if p == page %}<span class="current">{{ p }}</span>{% else %}<a href="?period={{ period }}&page={{ p }}">{{ p }}</a>{% endif %}
+  {% endfor %}
+  <a href="?period={{ period }}&page={{ page+1 if page<pages else pages }}">Next →</a>
+</div>
+{% endif %}
+{% endblock %}

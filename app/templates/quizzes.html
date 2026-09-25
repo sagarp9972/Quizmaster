@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Quizzes - Quiz Master{% endblock %}
+{% set active = 'quizzes' %}
+{% block content %}
+<h1 class="page-title">🧩 Quizzes</h1>
+<p class="page-sub">Choose a category and start playing quizzes</p>
+
+<form class="toolbar" method="get">
+  <input class="input" type="text" name="q" placeholder="Search quizzes (e.g. Science, History, Python...)" value="{{ search }}">
+  <button class="btn" type="submit">Search</button>
+</form>
+
+<div class="cat-grid">
+  {% for c in categories %}
+  <div class="cat-card">
+    <div class="emoji">{{ c.icon }}</div>
+    <div class="name">{{ c.name }}</div>
+    <div class="count">{{ c.question_count }} Questions</div>
+    <a class="btn" href="{{ url_for('main.play_nq1', key=c.key) }}">Play Now →</a>
+  </div>
+  {% else %}
+  <p style="color:var(--text-muted);">No categories match "{{ search }}".</p>
+  {% endfor %}
+</div>
+{% endblock %}

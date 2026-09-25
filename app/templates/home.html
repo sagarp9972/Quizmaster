@@ -1,1 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Home - Quiz Master{% endblock %}
+{% set active = 'home' %}
+{% block content %}
+<div class="welcome">
+  <h2>Welcome, {{ user.username }}! 👋</h2>
+  <p>Let's continue your learning journey today.</p>
+</div>
 
+<div class="card hero-card card-pad">
+  <div class="hero-row">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="hero-icon">▶️</div>
+      <div>
+        <div class="hero-title">Play All Quiz</div>
+        <div class="hero-desc">Start a random quiz from all categories and test your knowledge!</div>
+      </div>
+    </div>
+    <a href="{{ url_for('main.play_nq2') }}" class="btn">Play All Quiz →</a>
+  </div>
+</div>
+
+<div class="daily-card">
+  <h3>🎯 Daily Challenge</h3>
+  <p class="strong" style="margin-bottom:2px;">One special quiz every day!</p>
+  <p>Take the challenge, test your knowledge and keep your streak alive.</p>
+  <a href="{{ url_for('main.play_daily') }}" class="btn">Start Daily Challenge →</a>
+</div>
+
+{% if last_cat %}
+<div class="card last-cat-row">
+  <div>
+    <div class="label">📗 Last Category You Played</div>
+    <div class="value">{{ last_cat.name }}</div>
+  </div>
+  {% if last_cat.key %}
+  <a href="{{ url_for('main.play_nq1', key=last_cat.key) }}" class="btn btn-outline">Continue Quiz →</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="grid-2">
+  <div class="card card-pad">
+    <div style="font-weight:700;margin-bottom:14px;">📊 Category Wise Questions Played</div>
+    <div style="color:var(--text-muted);font-size:12.5px;margin-top:-10px;margin-bottom:14px;">Based on total number of questions you have played (Normal Quiz 1)</div>
+    {% if category_played %}
+      {% for c in category_played %}
+      <div class="cat-row">
+        <span style="min-width:150px;">{{ c.name }}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ c.pct }}%;"></div></div>
+        <span style="min-width:30px;text-align:right;color:var(--text-muted);">{{ c.pct }}%</span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="color:var(--text-muted);font-size:14px;">Play some Normal Quiz 1 categories to see your stats here.</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="card card-pad" style="margin-bottom:18px;">
+      <div class="stat-box">
+        <div class="icon">📋</div>
+        <div>
+          <div class="num">{{ total_nq1_questions }}</div>
+          <div class="lbl">Total Questions Played (Normal Quiz 1)</div>
+        </div>
+      </div>
+    </div>
+    {% if most_played %}
+    <div class="card card-pad">
+      <div class="stat-box" style="margin-bottom:0;">
+        <div class="icon">🏆</div>
+        <div>
+          <div class="num" style="font-size:20px;">{{ most_played.name }}</div>
+          <div class="lbl">Most Played Category</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="info-note" style="margin-top:20px;">
+  💡 Every question you answer makes you smarter! Keep learning, keep growing.
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Profile - Quiz Master{% endblock %}
+{% set active = 'profile' %}
+{% block content %}
+<h1 class="page-title">👤 Profile</h1>
+<p class="page-sub">View and manage your profile & quiz statistics (Normal Quiz 1)</p>
+
+<div class="card card-pad" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;">
+  <div style="display:flex;align-items:center;gap:18px;">
+    <div style="width:70px;height:70px;border-radius:50%;background:#ece9ff;display:flex;align-items:center;justify-content:center;font-size:30px;">👤</div>
+    <div>
+      <div style="font-size:19px;font-weight:800;">{{ current_user.username }}</div>
+      {% if current_user.full_name %}<div style="color:var(--text-muted);font-size:13.5px;">{{ current_user.full_name }}</div>{% endif %}
+      <div style="color:var(--text-muted);font-size:13.5px;">✉️ {{ current_user.email }}</div>
+      <div style="color:var(--text-muted);font-size:13.5px;">📅 Joined on {{ joined_label }}</div>
+      {% if current_user.location %}<div style="color:var(--text-muted);font-size:13.5px;">📍 {{ current_user.location }}</div>{% endif %}
+    </div>
+  </div>
+  <button type="button" class="btn btn-danger" id="btnClearData">🗑️ Clear All Data</button>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in messages %}
+    <div class="info-note" style="margin-bottom:18px;">{{ msg }}</div>
+  {% endfor %}
+{% endwith %}
+
+<div class="section-title">🧠 Quiz Statistics</div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="icon">🎮</div><div class="lbl">Total Games Played</div><div class="val">{{ summary.total_games }}</div></div>
+  <div class="stat-card"><div class="icon">✅</div><div class="lbl">Total Correct Answers</div><div class="val">{{ summary.total_correct }}</div></div>
+  <div class="stat-card"><div class="icon">❌</div><div class="lbl">Total Wrong Answers</div><div class="val">{{ summary.total_wrong }}</div></div>
+  <div class="stat-card"><div class="icon">🏆</div><div class="lbl">Total Score</div><div class="val">{{ '{:,}'.format(summary.total_score) }}</div></div>
+  <div class="stat-card"><div class="icon">❓</div><div class="lbl">Total Questions Played</div><div class="val">{{ summary.total_questions }}</div></div>
+  <div class="stat-card"><div class="icon">⏱️</div><div class="lbl">Total Time Spent</div><div class="val">{{ summary.total_time }}</div></div>
+</div>
+
+<div class="grid-2">
+  <div class="card card-pad">
+    <div style="font-weight:800;margin-bottom:10px;">📈 Overall Performance</div>
+    <div class="perf-grid">
+      <div class="perf-item"><div class="lbl">Overall Accuracy</div><div class="val">{{ summary.accuracy }}%</div><div class="progress green"><div style="width:{{ summary.accuracy }}%;"></div></div></div>
+      <div class="perf-item"><div class="lbl">Average Time per Game</div><div class="val">{{ summary.avg_time }} min</div><div class="progress purple"><div style="width:60%;"></div></div></div>
+      <div class="perf-item"><div class="lbl">Average Score per Game</div><div class="val">{{ summary.avg_score }}</div><div class="progress orange"><div style="width:60%;"></div></div></div>
+      <div class="perf-item"><div class="lbl">Average Questions per Game</div><div class="val">{{ summary.avg_questions }}</div><div class="progress purple"><div style="width:50%;"></div></div></div>
+      <div class="perf-item"><div class="lbl">Correct Answer Rate</div><div class="val">{{ summary.accuracy }}%</div><div class="progress green"><div style="width:{{ summary.accuracy }}%;"></div></div></div>
+      <div class="perf-item"><div class="lbl">Wrong Answer Rate</div><div class="val">{{ summary.wrong_rate }}%</div><div class="progress red"><div style="width:{{ summary.wrong_rate }}%;"></div></div></div>
+    </div>
+  </div>
+
+  <div class="card card-pad">
+    <div style="font-weight:800;margin-bottom:10px;">🏆 Personal Records <span style="font-weight:400;color:var(--text-muted);font-size:12px;">(In One Game)</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);"><span>⭐ Highest Score</span><b>{{ summary.highest_score }}</b></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);"><span>❓ Highest Questions Played</span><b>{{ summary.highest_questions }}</b></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);"><span>✅ Highest Correct</span><b>{{ summary.highest_correct }}</b></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);"><span>❌ Highest Wrong</span><b>{{ summary.highest_wrong }}</b></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 0;"><span>⏱️ Highest Time Spent</span><b>{{ summary.highest_time }}</b></div>
+  </div>
+</div>
+
+<div class="section-title">🔥 Streak <span style="font-weight:400;color:var(--text-muted);font-size:12.5px;">(Daily Quiz)</span></div>
+<div class="card card-pad" style="display:flex;gap:40px;flex-wrap:wrap;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:44px;height:44px;border-radius:50%;background:#ffe6df;display:flex;align-items:center;justify-content:center;font-size:20px;">🔥</div>
+    <div><div style="color:var(--text-muted);font-size:13px;">Current Streak</div><div style="font-size:20px;font-weight:800;color:#f2611c;">{{ streak.current }} Days</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:44px;height:44px;border-radius:50%;background:#fff2d9;display:flex;align-items:center;justify-content:center;font-size:20px;">🏆</div>
+    <div><div style="color:var(--text-muted);font-size:13px;">Longest Streak</div><div style="font-size:20px;font-weight:800;color:#f2611c;">{{ streak.longest }} Days</div></div>
+  </div>
+</div>
+
+<div class="section-title">📊 Category Performance <span style="font-weight:400;color:var(--text-muted);font-size:12.5px;">(Normal Quiz 1)</span></div>
+<div class="cat-perf-grid">
+  {% for c in cat_perf %}
+  <div class="cat-perf-card">
+    <div class="head">{{ c.name }}</div>
+    <div class="row"><span>Questions:</span><b>{{ c.questions }}</b></div>
+    <div class="row"><span>Correct:</span><b>{{ c.correct }}</b></div>
+    <div class="row"><span>Wrong:</span><b>{{ c.wrong }}</b></div>
+    <div class="row"><span>Accuracy:</span><b>{{ c.accuracy }}%</b></div>
+    <div class="progress green" style="margin-top:6px;"><div style="width:{{ c.accuracy }}%;"></div></div>
+    <div class="best">Best Score: {{ c.best_score }}</div>
+  </div>
+  {% else %}
+  <p style="color:var(--text-muted);">No Normal Quiz 1 games played yet.</p>
+  {% endfor %}
+</div>
+
+<div class="modal-overlay hidden" id="clearDataModal">
+  <div class="modal-box">
+    <h2>🗑️ Clear All Data?</h2>
+    <p>
+      This will permanently delete <b>all</b> of your quiz data on this account:
+      Normal Quiz 1 progress &amp; history, Normal Quiz 2 progress &amp; history,
+      Daily Quiz progress, streaks &amp; history, all quiz scores, and all points.
+      Your score will reset to 0 and your login, profile info, and dark mode
+      setting will stay unchanged. Other accounts are never affected.
+      <br><br><b>This action cannot be undone.</b>
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="clearDataCancel">Cancel</button>
+      <form method="post" action="{{ url_for('main.clear_data') }}">
+        <button class="btn btn-danger" type="submit">Yes, Clear Everything</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("btnClearData");
+  const modal = document.getElementById("clearDataModal");
+  const cancel = document.getElementById("clearDataCancel");
+  if (btn && modal) {
+    btn.addEventListener("click", () => modal.classList.remove("hidden"));
+    cancel.addEventListener("click", () => modal.classList.add("hidden"));
+  }
+});
+</script>
+{% endblock %}

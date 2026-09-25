@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="{{ 'dark' if current_user and current_user.dark_mode else 'light' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Quiz Master{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master logo">
+      <div class="name">QUIZ<br><span>MASTER</span></div>
+    </div>
+    <nav>
+      <a href="{{ url_for('main.home') }}" class="{{ 'active' if active=='home' else '' }}">🏠 Home</a>
+      <a href="{{ url_for('main.quizzes') }}" class="{{ 'active' if active=='quizzes' else '' }}">🧩 Quizzes</a>
+      <a href="{{ url_for('main.history') }}" class="{{ 'active' if active=='history' else '' }}">🕘 History</a>
+      <a href="{{ url_for('main.leaderboard') }}" class="{{ 'active' if active=='leaderboard' else '' }}">🏆 Leaderboard</a>
+      <a href="{{ url_for('main.profile') }}" class="{{ 'active' if active=='profile' else '' }}">👤 Profile</a>
+      <a href="{{ url_for('main.all_quiz') }}" class="{{ 'active' if active=='all_quiz' else '' }}">📊 All Quiz</a>
+      <div class="divider"></div>
+      <div class="toggle-row">
+        <span>🌙 Dark Mode</span>
+        <span class="switch {{ 'on' if current_user and current_user.dark_mode else '' }}" id="darkToggle"></span>
+      </div>
+      <button type="button" class="navbtn" id="logoutBtn">🚪 Logout</button>
+    </nav>
+    <div class="trophy-box">
+      <span class="emoji">🏆</span>
+      "The more you play,<br>the more you learn!"
+    </div>
+  </aside>
+
+  <div class="main">
+    {% block header %}
+    <div class="center-header">
+      <img src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="logo">
+      <div class="title"><span class="quiz">QUIZ</span> MASTER</div>
+    </div>
+    {% endblock %}
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="logoutModal">
+  <div class="modal-box">
+    <h2>Confirmation</h2>
+    <p>Are you sure you want to logout? You will need to login again to access your account.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="logoutCancel">Cancel</button>
+      <form method="post" action="{{ url_for('auth.logout') }}"><button class="btn btn-danger" type="submit">Logout</button></form>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

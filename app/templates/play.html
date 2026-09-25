@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playing Quiz - Quiz Master</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="play-body">
+
+<div class="play-top">
+  <a class="back" href="{{ url_for('main.home') }}">← Home</a>
+  <div class="sep"></div>
+  <span id="dateLabel">📅 --</span>
+  <div class="sep"></div>
+  <span>🧠 Quiz</span>
+  <div class="sep"></div>
+  <span class="cat-name" id="catNameLabel">
+    {% if mode == 'nq1' %}{{ category.icon }} {{ category.name }}
+    {% elif mode == 'nq2' %}🌐 Play All Quiz
+    {% else %}📅 Daily Challenge{% endif %}
+  </span>
+</div>
+
+<div class="status-bar">
+  <div class="stat"><span class="lbl">❓ Question</span><span class="val" id="statQuestion">–</span></div>
+  <div class="stat"><span class="lbl">⏱️ Time</span><span class="val" id="statTime">00:00</span></div>
+  {% if allow_hints %}
+  <div class="stat"><span class="lbl">💡 Hint Remaining</span><span class="val" id="statHints">–</span></div>
+  {% endif %}
+  <div class="stat"><span class="lbl">✅ Correct</span><span class="val" id="statCorrect">0</span></div>
+  <div class="stat"><span class="lbl">❌ Wrong</span><span class="val" id="statWrong">0</span></div>
+  <div class="stat"><span class="lbl">🏆 Score</span><span class="val" id="statScore">0</span></div>
+</div>
+
+<div class="play-wrap">
+  <div class="q-card" id="qCard">
+    <div class="q-label">❓ Question:</div>
+    <div class="q-text" id="qText">Loading question...</div>
+    <div id="optionsWrap"></div>
+    <div id="solutionBox" class="solution-box hidden">
+      <div class="lbl">📖 Explanation</div>
+      <div id="solutionText"></div>
+    </div>
+  </div>
+
+  <div class="play-actions">
+    {% if allow_hints %}<button class="btn btn-hint" id="btnHint">💡 Hint</button>{% endif %}
+    <button class="btn btn-prev" id="btnPrev">← Previous Question</button>
+    <button class="btn btn-next" id="btnNext">Next Question →</button>
+  </div>
+  <div class="play-actions">
+    <button class="btn btn-secondary" id="btnPause">⏸️ Pause</button>
+    <button class="btn btn-save" id="btnFinish">💾 Save & Finish</button>
+    <button class="btn btn-exit" id="btnExit">🚪 Exit</button>
+  </div>
+</div>
+
+<!-- Pause overlay -->
+<div class="modal-overlay hidden" id="pauseModal">
+  <div class="modal-box">
+    <h2>⏸️ Quiz Paused</h2>
+    <p>Take your time. Click resume when you're ready to continue.</p>
+    <div class="modal-actions"><button class="btn" id="btnResume">▶️ Resume Quiz</button></div>
+  </div>
+</div>
+
+<!-- Exit confirm -->
+<div class="modal-overlay hidden" id="exitModal">
+  <div class="modal-box">
+    <h2>🚪 Exit Without Saving?</h2>
+    <p>Your current progress, score and answers for this game will not be saved.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="exitCancel">Cancel</button>
+      <button class="btn btn-danger" id="exitConfirm">Exit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result overlay -->
+<div class="modal-overlay hidden" id="resultModal">
+  <div class="modal-box">
+    <h2>🎉 Quiz Complete!</h2>
+    <p id="resultSub">Here's how you did.</p>
+    <div class="result-grid">
+      <div class="box"><div class="n" id="resScore">0</div><div class="l">🏆 Score</div></div>
+      <div class="box"><div class="n" id="resCorrect">0</div><div class="l">✅ Correct</div></div>
+      <div class="box"><div class="n" id="resWrong">0</div><div class="l">❌ Wrong</div></div>
+      <div class="box"><div class="n" id="resTime">00:00</div><div class="l">⏱️ Time</div></div>
+    </div>
+    <div class="modal-actions">
+      <a class="btn btn-secondary" href="{{ url_for('main.history') }}">View History</a>
+      <a class="btn" href="{{ url_for('main.home') }}">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- No-daily-quiz-left overlay -->
+<div class="modal-overlay hidden" id="blockedModal">
+  <div class="modal-box">
+    <h2>👋 Hold on</h2>
+    <p id="blockedMsg"></p>
+    <div class="modal-actions"><a class="btn" href="{{ url_for('main.home') }}">Back to Home</a></div>
+  </div>
+</div>
+
+<script>
+window.QUIZ_MODE = {{ mode|tojson }};
+window.QUIZ_CATEGORY_KEY = {{ (category.key if category else None)|tojson }};
+window.ALLOW_HINTS = {{ allow_hints|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+</body>
+</html>
